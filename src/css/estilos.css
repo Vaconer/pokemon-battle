@@ -104,6 +104,10 @@ main {
     cursor: pointer;
   }
 
+  h1 {
+    padding-left: 10%;
+  }
+
   .card-pokemon {
     width: 170px;
     padding: 15px 10px;
@@ -145,12 +149,13 @@ main {
     height: 220px; /* Aumente conforme necessário */
     object-fit: cover;
     z-index: 1; /* Garante que o gif fique sobre o card */
+    transition: transform 0.3s ease; /* Adiciona uma transição suave */
   }
-  
   
   .card-pokemon:hover .gif {
     transform: translateX(-50%) scale(1.1); /* Escala e posiciona o gif no hover */
-  }  
+  }
+   
 
   .types {
     display: flex;
@@ -170,43 +175,6 @@ main {
     font-size: 12px;
     font-weight: bold;
   }
-
-  .tipo.fire {background-color: #b94e48; }
-  
-  .tipo.water {background-color: #5a3f7d; }
-  
-  .tipo.grass {background-color: #6a8e6f; }
-  
-  .tipo.electric {background-color: #d4b5f0; }
-  
-  .tipo.ice {background-color: #7a5a7f; }
-  
-  .tipo.fighting {background-color: #a34e5d; }
-  
-  .tipo.poison {background-color: #8e5e8f; }
-  
-  .tipo.ground {background-color: #a64d29; }
-  
-  .tipo.flying {background-color: #7b6b9c; }
-  
-  .tipo.psychic {background-color: #d05f82; }
-  
-  .tipo.bug {background-color: #7c9c49; }
-  
-  .tipo.rock {background-color: #9b6b4d; }
-  
-  .tipo.ghost {background-color: #7a5f9b; }
-  
-  .tipo.dragon {background-color: #5d8abc;}
-  
-  .tipo.dark {background-color: #6e6b74; }
-  
-  .tipo.steel {background-color: #4e7b9e; }
-  
-  .tipo.fairy {background-color: #d09ac9; }
-  
-  .tipo.normal {background-color: #a8a4b0; }
-  
 
   .descricao {
     font-size: 12px;
