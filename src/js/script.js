@@ -18,6 +18,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const pokemon2Attack = document.getElementById("pokemon2-attack");
   const pokemon2Damage = document.getElementById("pokemon2-damage");
 
+  const typeIcons = {
+    fire: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/fire.svg" alt="Fire" style="width: 24px; height: 24px;" />`,
+    water: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/water.svg" alt="Water" style="width: 24px; height: 24px;" />`,
+    grass: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/grass.svg" alt="Grass" style="width: 24px; height: 24px;" />`,
+    electric: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/electric.svg" alt="Electric" style="width: 24px; height: 24px;" />`,
+    ice: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/ice.svg" alt="Ice" style="width: 24px; height: 24px;" />`,
+    fighting: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/fighting.svg" alt="Fighting" style="width: 24px; height: 24px;" />`,
+    poison: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/poison.svg" alt="Poison" style="width: 24px; height: 24px;" />`,
+    ground: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/ground.svg" alt="Ground" style="width: 24px; height: 24px;" />`,
+    flying: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/flying.svg" alt="Flying" style="width: 24px; height: 24px;" />`,
+    psychic: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/psychic.svg" alt="Psychic" style="width: 24px; height: 24px;" />`,
+    bug: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/bug.svg" alt="Bug" style="width: 24px; height: 24px;" />`,
+    rock: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/rock.svg" alt="Rock" style="width: 24px; height: 24px;" />`,
+    ghost: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/ghost.svg" alt="Ghost" style="width: 24px; height: 24px;" />`,
+    dragon: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/dragon.svg" alt="Dragon" style="width: 24px; height: 24px;" />`,
+    dark: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/dark.svg" alt="Dark" style="width: 24px; height: 24px;" />`,
+    steel: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/steel.svg" alt="Steel" style="width: 24px; height: 24px;" />`,
+    fairy: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/fairy.svg" alt="Fairy" style="width: 24px; height: 24px;" />`,
+    normal: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/normal.svg" alt="Normal" style="width: 24px; height: 24px;" />`,
+  };
   // Variável para alternar entre o primeiro e o segundo Pokémon nos cards de batalha
   let selectedPokemon = 1;
 
@@ -28,9 +48,14 @@ document.addEventListener("DOMContentLoaded", function () {
   let allPokemonData = [];
 
   // Função para buscar dados de um Pokémon da PokéAPI pelo ID
-  function fetchPokemonData(id) {
-    return axios.get(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+  async function fetchPokemonData(id) {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar Pokémon com ID ${id}`);
+    }
+    return response.json();
   }
+
 
   // Função que cria e exibe um card para cada Pokémon na lista
   function createPokemonCard(pokemon) {
@@ -54,20 +79,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Estrutura HTML para exibir o sprite e as informações do Pokémon no card
     const infos = `
-      <img src="${sprites.front_default}" alt="${name}" class="gif" />
-      <div class="infos">
-        <span>${name.charAt(0).toUpperCase() + name.slice(1)}</span>
-        <ul class="types">
-          ${types
-        .map(
-          (type) =>
-            `<li class="tipo ${type.type.name}">${typeIcons[type.type.name] || type.type.name}</li>`
-        )
-        .join("")}
-        </ul>
-      </div>
-    `;
-
+       <img src="${sprites.front_default}" alt="${name}" class="gif" />
+    <div class="infos">
+      <span>${name.charAt(0).toUpperCase() + name.slice(1)}</span>
+      <ul class="types">
+        ${types
+          .map(
+            (obj) =>
+                `<li class="tipo ${obj.type.name}">${typeIcons[obj.type.name] || obj.type.name}</li>`
+          )
+          .join("")}
+      </ul>
+    </div>
+`;
+    
     // Define o conteúdo HTML do card
     card.innerHTML = infos;
 
@@ -119,13 +144,23 @@ document.addEventListener("DOMContentLoaded", function () {
     return `${r}, ${g}, ${b}`;
   }
 
+  const isLoaded = ()=>{
+    const load = document.getElementById('loading')
+    load.style.display = 'none'
+  }
+  
   // Função que carrega os dados de todos os Pokémon e cria os cards
   async function loadPokemonData() {
     try {
-      for (let id = 1; id <= pokemonCount; id++) {
-        const response = await fetchPokemonData(id); // Busca os dados do Pokémon por ID
-        createPokemonCard(response.data); // Cria o card do Pokémon
-      }
+      // Cria um array de promessas para buscar os dados de todos os Pokémon
+      const promises = Array.from({ length: pokemonCount }, (_, index) => fetchPokemonData(index + 1));
+  
+      // Espera todas as promessas serem resolvidas
+      const results = await Promise.all(promises);
+
+      // Cria os cards dos  Pokémon
+      results.forEach(data => createPokemonCard(data));
+      isLoaded()
     } catch (error) {
       console.error("Erro ao carregar dados dos Pokémon:", error); // Mostra o erro no console, caso ocorra
     }
