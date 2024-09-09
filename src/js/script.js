@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Obtém a lista de Pokémon e a barra de pesquisa
   const pokemonList = document.getElementById("pokemon-list");
   const searchBar = document.getElementById("search-bar");
-  
+
   // Elementos dos cards de batalha (Pokémon 1 e Pokémon 2)
   const pokemon1Img = document.getElementById("pokemon1-img");
   const pokemon1Name = document.getElementById("pokemon1-name");
@@ -18,16 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const pokemon2Attack = document.getElementById("pokemon2-attack");
   const pokemon2Damage = document.getElementById("pokemon2-damage");
 
-  // Variável para alternar entre o primeiro e o segundo Pokémon nos cards de batalha
-  let selectedPokemon = 1;
-
-  // Quantidade total de Pokémon que será buscada
-  const pokemonCount = 898;
-
-  // Armazena os dados de todos os Pokémon carregados
-  let allPokemonData = [];
-
-  // Mapeamento de tipos para ícones SVG
   const typeIcons = {
     fire: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/fire.svg" alt="Fire" style="width: 24px; height: 24px;" />`,
     water: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/water.svg" alt="Water" style="width: 24px; height: 24px;" />`,
@@ -48,11 +38,24 @@ document.addEventListener("DOMContentLoaded", function () {
     fairy: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/fairy.svg" alt="Fairy" style="width: 24px; height: 24px;" />`,
     normal: `<img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/normal.svg" alt="Normal" style="width: 24px; height: 24px;" />`,
   };
+  // Variável para alternar entre o primeiro e o segundo Pokémon nos cards de batalha
+  let selectedPokemon = 1;
 
-  // Obtém os dados de um Pokémon da PokéAPI pelo ID
-  function fetchPokemonData(id) {
-    return axios.get(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+  // Quantidade total de Pokémon que será buscada
+  const pokemonCount = 898;
+
+  // Armazena os dados de todos os Pokémon carregados
+  let allPokemonData = [];
+
+  // Função para buscar dados de um Pokémon da PokéAPI pelo ID
+  async function fetchPokemonData(id) {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar Pokémon com ID ${id}`);
+    }
+    return response.json();
   }
+
 
   // Função que cria e exibe um card para cada Pokémon na lista
   function createPokemonCard(pokemon) {
@@ -76,20 +79,20 @@ document.addEventListener("DOMContentLoaded", function () {
   
     // Estrutura HTML para exibir o sprite e as informações do Pokémon no card
     const infos = `
-      <img src="${sprites.front_default}" alt="${name}" class="gif" />
-      <div class="infos">
-        <span>${name.charAt(0).toUpperCase() + name.slice(1)}</span>
-        <ul class="types">
-          ${types
-            .map(
-              (type) =>
-                `<li class="tipo ${type.type.name}">${typeIcons[type.type.name] || type.type.name}</li>`
-            )
-            .join("")}
-        </ul>
-      </div>
-    `;
-  
+       <img src="${sprites.front_default}" alt="${name}" class="gif" />
+    <div class="infos">
+      <span>${name.charAt(0).toUpperCase() + name.slice(1)}</span>
+      <ul class="types">
+        ${types
+          .map(
+            (obj) =>
+                `<li class="tipo ${obj.type.name}">${typeIcons[obj.type.name] || obj.type.name}</li>`
+          )
+          .join("")}
+      </ul>
+    </div>
+`;
+    
     // Define o conteúdo HTML do card
     card.innerHTML = infos;
   
@@ -106,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
     allPokemonData.push(card);
   }
   
+
 
   // Função que retorna a cor de fundo correspondente ao tipo de Pokémon
   function getTypeColor(type) {
@@ -141,29 +145,26 @@ document.addEventListener("DOMContentLoaded", function () {
     return `${r}, ${g}, ${b}`;
   }
 
+  const isLoaded = ()=>{
+    const load = document.getElementById('loading')
+    load.style.display = 'none'
+  }
+  
   // Função que carrega os dados de todos os Pokémon e cria os cards
   async function loadPokemonData() {
     try {
-      for (let id = 1; id <= pokemonCount; id++) {
-        const response = await fetchPokemonData(id); // Busca os dados do Pokémon por ID
-        createPokemonCard(response.data); // Cria o card do Pokémon
-      }
+      // Cria um array de promessas para buscar os dados de todos os Pokémon
+      const promises = Array.from({ length: pokemonCount }, (_, index) => fetchPokemonData(index + 1));
+  
+      // Espera todas as promessas serem resolvidas
+      const results = await Promise.all(promises);
+
+      // Cria os cards dos  Pokémon
+      results.forEach(data => createPokemonCard(data));
+      isLoaded()
     } catch (error) {
       console.error("Erro ao carregar dados dos Pokémon:", error); // Mostra o erro no console, caso ocorra
     }
-  }
-
-  // Função para filtrar os cards de Pokémon conforme a busca
-  function filterPokemonCards(query) {
-    query = query.toLowerCase(); // Converte a consulta para minúsculas
-    allPokemonData.forEach((card) => {
-      const name = card.dataset.name;
-      if (name.includes(query)) {
-        card.style.display = ""; // Exibe o card se o nome contiver a consulta
-      } else {
-        card.style.display = "none"; // Oculta o card se não contiver a consulta
-      }
-    });
   }
 
   // Função para selecionar um Pokémon e exibir suas informações no card de batalha
@@ -173,9 +174,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const hp = stats.find((stat) => stat.stat.name === "hp").base_stat; // Obtém o HP do Pokémon
     const attack = stats.find((stat) => stat.stat.name === "attack").base_stat; // Obtém o ataque base do Pokémon
     const damage = moves.length > 0 ? moves[0].move.name : "None"; // Nome do primeiro movimento (ataque)
-  
+
     const typesText = types.map((t) => typeIcons[t.type.name] || t.type.name).join(" "); // Concatena os tipos em uma string com ícones
-  
+
     // Se for o primeiro Pokémon selecionado
     if (selectedPokemon === 1) {
       pokemon1Img.src = sprites.front_default;
@@ -196,12 +197,40 @@ document.addEventListener("DOMContentLoaded", function () {
       selectedPokemon = 1; // Retorna ao primeiro Pokémon
     }
   }
+  
+  document.querySelectorAll('.itens img').forEach(icon => {
+    icon.addEventListener('click', function() {
+      const type = this.getAttribute('data-type');
+      document.querySelectorAll('.card-pokemon').forEach(pokemon => { 
+        const pokemonTypes = pokemon.getAttribute('data-types').split(', ');
+        if (pokemonTypes.includes(type) || type === 'all') {
+          pokemon.style.display = 'inline-block';
+        } else {
+          pokemon.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Corrija o filtro por nome
+  function filterPokemonCards(query) {
+    query = query.toLowerCase(); // Converte a consulta para minúsculas
+    allPokemonData.forEach((card) => {
+      const name = card.dataset.name.toLowerCase(); // Certifique-se de que o nome está em minúsculas
+      if (name.includes(query)) {
+        card.style.display = ""; // Exibe o card se o nome contiver a consulta
+      } else {
+        card.style.display = "none"; // Oculta o card se não contiver a consulta
+      }
+    });
+  }
 
   // Adiciona um ouvinte de evento para a barra de pesquisa
   searchBar.addEventListener("input", (event) => {
     filterPokemonCards(event.target.value); // Filtra os cards conforme a entrada do usuário
   });
 
-  // Carrega os dados dos Pokémon quando a página é carregada
+  // Código para carregar Pokémon
   loadPokemonData();
 });
+

@@ -61,28 +61,54 @@
   </div>
 
   <main>
-    <div class="wrapper-search">
-      <h1>Pokedex</h1>
+    <div class="search-itens">
+      <div class="wrapper-search">
 
-      <div class="group">
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
-          <g>
-            <path
-              d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
-            ></path>
-          </g>
-        </svg>
-      
-        <input
-          id="search-bar"
-          class="input"
-          type="search"
-          placeholder="Pesquise por Pokémon..."
-          name="searchbar"
-        />
+        <div class="group">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
+            <g>
+              <path
+                d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
+              ></path>
+            </g>
+          </svg>
+        
+          <input
+            id="search-bar"
+            class="input"
+            type="search"
+            placeholder="Pesquise por Pokémon..."
+            name="searchbar"
+          />
+        </div>
+  
+        <div class="itens">
+          <ul>
+            <li title="Fogo"><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/fire.svg" alt="Fire" style="width: 24px; height: 24px;" data-type="fire" /></li>           
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/grass.svg" alt="Grass" style="width: 24px; height: 24px;" data-type="grass" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/electric.svg" alt="Electric" style="width: 24px; height: 24px;"  data-type="eletric" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/ice.svg" alt="Ice" style="width: 24px; height: 24px;" data-type="ice" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/fighting.svg" alt="Fighting" style="width: 24px; height: 24px;" data-type="fighting" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/poison.svg" alt="Poison" style="width: 24px; height: 24px;" data-type="poison" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/ground.svg" alt="Ground" style="width: 24px; height: 24px;" data-type="ground"/></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/flying.svg" alt="Flying" style="width: 24px; height: 24px;" data-type="flying"/></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/psychic.svg" alt="Psychic" style="width: 24px; height: 24px;" data-type="psychic" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/bug.svg" alt="Bug" style="width: 24px; height: 24px;" data-type="bug" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/rock.svg" alt="Rock" style="width: 24px; height: 24px;" data-type="rock" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/ghost.svg" alt="Ghost" style="width: 24px; height: 24px;" data-type="ghost" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/dragon.svg" alt="Dragon" style="width: 24px; height: 24px;" data-type="dragon" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/dark.svg" alt="Dark" style="width: 24px; height: 24px;" data-type="dark" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/steel.svg" alt="Steel" style="width: 24px; height: 24px;" data-type="steel" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/fairy.svg" alt="Fairy" style="width: 24px; height: 24px;" data-type="fairy" /></li>
+            <li><img src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/normal.svg" alt="Normal" style="width: 24px; height: 24px;" data-type="normal" /></li>
+          </ul>
+        </div>
+        
       </div>
     </div>
+    
     <ul class="listagem-pokemon" id="pokemon-list">
+      <p id="loading"> Carregando ...</p>
       <!-- Cartões  -->
     </ul>
   </main>
