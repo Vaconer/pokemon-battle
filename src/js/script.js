@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Obtém a lista de Pokémon e a barra de pesquisa
   const pokemonList = document.getElementById("pokemon-list");
   const searchBar = document.getElementById("search-bar");
-  
+
   // Elementos dos cards de batalha (Pokémon 1 e Pokémon 2)
   const pokemon1Img = document.getElementById("pokemon1-img");
   const pokemon1Name = document.getElementById("pokemon1-name");
@@ -54,20 +54,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Estrutura HTML para exibir o sprite e as informações do Pokémon no card
     const infos = `
-    <img src="${sprites.front_default}" alt="${name}" class="gif" />
-    <div class="infos">
-      <span>${name.charAt(0).toUpperCase() + name.slice(1)}</span>
-      <ul class="types">
-        ${types
-          .map(
-            (type) =>
-              `<li class="tipo ${type.type.name}">${type.type.name}</li>`
-          )
-          .join("")}
-      </ul>
-    </div>
-`;
-
+      <img src="${sprites.front_default}" alt="${name}" class="gif" />
+      <div class="infos">
+        <span>${name.charAt(0).toUpperCase() + name.slice(1)}</span>
+        <ul class="types">
+          ${types
+        .map(
+          (type) =>
+            `<li class="tipo ${type.type.name}">${typeIcons[type.type.name] || type.type.name}</li>`
+        )
+        .join("")}
+        </ul>
+      </div>
+    `;
 
     // Define o conteúdo HTML do card
     card.innerHTML = infos;
@@ -84,6 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Armazena o card para uso posterior (ex: filtragem)
     allPokemonData.push(card);
   }
+
 
   // Função que retorna a cor de fundo correspondente ao tipo de Pokémon
   function getTypeColor(type) {
@@ -131,19 +131,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Função para filtrar os cards de Pokémon conforme a busca
-  function filterPokemonCards(query) {
-    query = query.toLowerCase(); // Converte a consulta para minúsculas
-    allPokemonData.forEach((card) => {
-      const name = card.dataset.name;
-      if (name.includes(query)) {
-        card.style.display = ""; // Exibe o card se o nome contiver a consulta
-      } else {
-        card.style.display = "none"; // Oculta o card se não contiver a consulta
-      }
-    });
-  }
-
   // Função para selecionar um Pokémon e exibir suas informações no card de batalha
   function selectPokemon(card) {
     const pokemon = JSON.parse(card.dataset.pokemon); // Obtém os dados completos do Pokémon do dataset
@@ -151,6 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const hp = stats.find((stat) => stat.stat.name === "hp").base_stat; // Obtém o HP do Pokémon
     const attack = stats.find((stat) => stat.stat.name === "attack").base_stat; // Obtém o ataque base do Pokémon
     const damage = moves.length > 0 ? moves[0].move.name : "None"; // Nome do primeiro movimento (ataque)
+
+    const typesText = types.map((t) => typeIcons[t.type.name] || t.type.name).join(" "); // Concatena os tipos em uma string com ícones
 
     // Se for o primeiro Pokémon selecionado
     if (selectedPokemon === 1) {
@@ -172,12 +161,40 @@ document.addEventListener("DOMContentLoaded", function () {
       selectedPokemon = 1; // Alterna de volta para o primeiro Pokémon
     }
   }
-
-  // Adiciona um evento de input à barra de pesquisa para filtrar os cards
-  searchBar.addEventListener("input", function () {
-    filterPokemonCards(this.value); // Filtra os Pokémon conforme o texto digitado
+  
+  document.querySelectorAll('.itens img').forEach(icon => {
+    icon.addEventListener('click', function() {
+      const type = this.getAttribute('data-type');
+      document.querySelectorAll('.card-pokemon').forEach(pokemon => { 
+        const pokemonTypes = pokemon.getAttribute('data-types').split(', ');
+        if (pokemonTypes.includes(type) || type === 'all') {
+          pokemon.style.display = 'inline-block';
+        } else {
+          pokemon.style.display = 'none';
+        }
+      });
+    });
   });
 
-  // Carrega todos os dados de Pokémon ao carregar a página
+  // Corrija o filtro por nome
+  function filterPokemonCards(query) {
+    query = query.toLowerCase(); // Converte a consulta para minúsculas
+    allPokemonData.forEach((card) => {
+      const name = card.dataset.name.toLowerCase(); // Certifique-se de que o nome está em minúsculas
+      if (name.includes(query)) {
+        card.style.display = ""; // Exibe o card se o nome contiver a consulta
+      } else {
+        card.style.display = "none"; // Oculta o card se não contiver a consulta
+      }
+    });
+  }
+
+  // Adiciona um ouvinte de evento para a barra de pesquisa
+  searchBar.addEventListener("input", (event) => {
+    filterPokemonCards(event.target.value); // Filtra os cards conforme a entrada do usuário
+  });
+
+  // Código para carregar Pokémon
   loadPokemonData();
 });
+
