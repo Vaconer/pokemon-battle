@@ -43,7 +43,8 @@ header {
   display: flex;
   align-items: center;
   position: relative;
-  max-width: 200px; /* Ajuste conforme necessário */
+  max-width: 200px;
+  /* Ajuste conforme necessário */
 }
 
 .input {
@@ -54,9 +55,11 @@ header {
   box-shadow: 0 0 0 1.5px #2b2c37, 0 0 25px -17px #000;
   border: 0;
   border-radius: 12px;
-  background-color: #16171d; /* Cor de fundo escura */
+  background-color: #16171d;
+  /* Cor de fundo escura */
   outline: none;
-  color: #bdbecb; /* Cor do texto */
+  color: #bdbecb;
+  /* Cor do texto */
   transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
   cursor: text;
   z-index: 0;
@@ -95,6 +98,7 @@ h2 {
 
 main {
   .listagem-pokemon {
+    padding-top: 3%;
     display: flex;
     flex-wrap: wrap;
     gap: 1em;
@@ -102,6 +106,10 @@ main {
     width: calc(100% - 40px);
     margin: 0 20px;
     cursor: pointer;
+  }
+
+  h1 {
+    padding-left: 10%;
   }
 
   .card-pokemon {
@@ -114,11 +122,13 @@ main {
     gap: 15px;
     border-radius: 16px;
     transition: 0.3s ease-in-out;
-    position: relative; /* Necessário para posicionamento absoluto do gif */
-    overflow: visible; /* Permite que o conteúdo saia do card */
+    position: relative;
+    /* Necessário para posicionamento absoluto do gif */
+    overflow: visible;
+    /* Permite que o conteúdo saia do card */
     padding-top: 200px;
   }
-  
+
   .card-pokemon::before {
     content: '';
     position: absolute;
@@ -126,31 +136,44 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 16px; /* Deve corresponder ao border-radius do card */
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0) 0%, /* Cor normal no centro (transparente) */
-      rgba(33, 2, 44, 0.6) 70%, /* Cor escura nas bordas */
-      rgba(33, 2, 44, 0.8) 100% /* Cor ainda mais escura nas bordas */
-    );
-    z-index: 0; /* Garante que a vinheta fique atrás do conteúdo do card */
+    border-radius: 16px;
+    /* Deve corresponder ao border-radius do card */
+    background: radial-gradient(circle,
+        rgba(255, 255, 255, 0) 0%,
+        /* Cor normal no centro (transparente) */
+        rgba(33, 2, 44, 0.6) 70%,
+        /* Cor escura nas bordas */
+        rgba(33, 2, 44, 0.8) 100%
+        /* Cor ainda mais escura nas bordas */
+      );
+    z-index: 0;
+    /* Garante que a vinheta fique atrás do conteúdo do card */
   }
-  
+
   .gif {
-    position: absolute; /* Posicionamento absoluto */
-    top: -30px; /* Ajuste conforme necessário */
+    position: absolute;
+    /* Posicionamento absoluto */
+    top: 0px;
+    /* Ajuste conforme necessário */
     left: 50%;
     transform: translateX(-50%);
-    width: 220px; /* Aumente conforme necessário */
-    height: 220px; /* Aumente conforme necessário */
+    width: 170px !important;
+    /* Aumente conforme necessário */
+    height: 170px !important;
+    min-width: 170px;
+    /* Aumente conforme necessário */
     object-fit: cover;
-    z-index: 1; /* Garante que o gif fique sobre o card */
+    z-index: 1;
+    /* Garante que o gif fique sobre o card */
+    transition: transform 0.3s ease;
+    /* Adiciona uma transição suave */
   }
-  
-  
+
   .card-pokemon:hover .gif {
-    transform: translateX(-50%) scale(1.1); /* Escala e posiciona o gif no hover */
-  }  
+    transform: translateX(-50%) scale(1.1);
+    /* Escala e posiciona o gif no hover */
+  }
+
 
   .types {
     display: flex;
@@ -171,42 +194,6 @@ main {
     font-weight: bold;
   }
 
-  .tipo.fire {background-color: #b94e48; }
-  
-  .tipo.water {background-color: #5a3f7d; }
-  
-  .tipo.grass {background-color: #6a8e6f; }
-  
-  .tipo.electric {background-color: #d4b5f0; }
-  
-  .tipo.ice {background-color: #7a5a7f; }
-  
-  .tipo.fighting {background-color: #a34e5d; }
-  
-  .tipo.poison {background-color: #8e5e8f; }
-  
-  .tipo.ground {background-color: #a64d29; }
-  
-  .tipo.flying {background-color: #7b6b9c; }
-  
-  .tipo.psychic {background-color: #d05f82; }
-  
-  .tipo.bug {background-color: #7c9c49; }
-  
-  .tipo.rock {background-color: #9b6b4d; }
-  
-  .tipo.ghost {background-color: #7a5f9b; }
-  
-  .tipo.dragon {background-color: #5d8abc;}
-  
-  .tipo.dark {background-color: #6e6b74; }
-  
-  .tipo.steel {background-color: #4e7b9e; }
-  
-  .tipo.fairy {background-color: #d09ac9; }
-  
-  .tipo.normal {background-color: #a8a4b0; }
-  
 
   .descricao {
     font-size: 12px;
@@ -224,6 +211,7 @@ main {
     flex-wrap: wrap;
     gap: 8px;
     z-index: 1;
+
     span {
       font-size: 16px;
       font-weight: bold;
@@ -231,7 +219,53 @@ main {
     }
   }
 
+  .filter-container {
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .filter-select {
+    font-family: "Poppins", sans-serif;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+  }
+
+
+  .search-itens {
+
+    .itens {
+      ul {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+        cursor: pointer;
+      }
+
+      li {
+        transition: transform 0.3s ease;
+
+        img {
+          width: 2em !important;
+          height: 2em !important;
+        }
+
+      }
+
+      li:hover {
+        transform: scale(1.2);
+      }
+
+    }
+  }
 }
+
 
 .wrapper-search {
   width: 100%;
@@ -239,7 +273,11 @@ main {
   grid-template-columns: 0.75fr 1fr;
   align-items: center;
   justify-content: center;
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
 }
+
 .wrapper-battle {
   width: 100%;
   display: flex;
@@ -247,10 +285,13 @@ main {
   align-items: center;
   justify-content: center;
   gap: 2rem;
+  padding-bottom: 3%;
 }
+
 .wrapper-battle h2 {
   color: gray;
 }
+
 .cards-battle {
   width: 100%;
   display: flex;
@@ -262,11 +303,9 @@ main {
 .btn-battle {
   border: hidden;
   background: rgb(246, 120, 48);
-  background: linear-gradient(
-    93deg,
-    rgba(246, 120, 48, 1) 32%,
-    rgba(230, 17, 17, 1) 96%
-  );
+  background: linear-gradient(93deg,
+      rgba(246, 120, 48, 1) 32%,
+      rgba(230, 17, 17, 1) 96%);
 
   padding: 10px;
   color: white;
@@ -275,9 +314,11 @@ main {
   cursor: pointer;
   opacity: 0.8;
 }
+
 .btn-battle:hover {
   opacity: 1;
 }
+
 .flip-card {
   background-color: transparent;
   width: 190px;
@@ -322,24 +363,31 @@ main {
 }
 
 .flip-card-front {
-  background: linear-gradient(
-    120deg,
-    rgba(31, 2, 42, 0.7) 30%,  /* tom escuro de roxo */
-    rgba(115, 6, 81, 0.425) 88%,  /* tom mais escuro de roxo */
-    rgba(98, 4, 101, 0.6) 40%,  /* tom intermediário de roxo */
-    rgba(255, 151, 113, 0.5) 78%  /* tom claro e suave */
-  );
-  color: #ffc671c7;  /* cor dourada para contraste */
+  background: linear-gradient(120deg,
+      rgba(31, 2, 42, 0.7) 30%,
+      /* tom escuro de roxo */
+      rgba(115, 6, 81, 0.425) 88%,
+      /* tom mais escuro de roxo */
+      rgba(98, 4, 101, 0.6) 40%,
+      /* tom intermediário de roxo */
+      rgba(255, 151, 113, 0.5) 78%
+      /* tom claro e suave */
+    );
+  color: #ffc671c7;
+  /* cor dourada para contraste */
 }
 
 .flip-card-back {
-  background: linear-gradient(
-    120deg,
-    rgba(31, 2, 42, 0.7) 30%,  /* tom escuro de roxo */
-    rgba(115, 6, 81, 0.425) 88%,  /* tom mais escuro de roxo */
-    rgba(98, 4, 101, 0.6) 40%,  /* tom intermediário de roxo */
-    rgba(255, 151, 113, 0.5) 78%  /* tom claro e suave */
-  );
+  background: linear-gradient(120deg,
+      rgba(31, 2, 42, 0.7) 30%,
+      /* tom escuro de roxo */
+      rgba(115, 6, 81, 0.425) 88%,
+      /* tom mais escuro de roxo */
+      rgba(98, 4, 101, 0.6) 40%,
+      /* tom intermediário de roxo */
+      rgba(255, 151, 113, 0.5) 78%
+      /* tom claro e suave */
+    );
 
   color: white;
   transform: rotateY(180deg);
