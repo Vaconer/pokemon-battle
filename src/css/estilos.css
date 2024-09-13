@@ -8,7 +8,6 @@ body {
   overflow-x: hidden;
 }
 
-
 header,
 main h1 {
   padding: 20px;
@@ -91,181 +90,164 @@ header {
   z-index: 1;
 }
 
-
 h2 {
   color: rgba(255, 174, 145, 0.703) !important;
 }
 
-main {
-  .listagem-pokemon {
-    padding-top: 3%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    justify-content: center;
-    width: calc(100% - 40px);
-    margin: 0 20px;
-    cursor: pointer;
-  }
+.listagem-pokemon {
+  padding-top: 3%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  justify-content: center;
+  width: calc(100% - 40px);
+  margin: 0 20px;
+  cursor: pointer;
+}
 
-  h1 {
-    padding-left: 10%;
-  }
+h1 {
+  padding-left: 10%;
+}
 
-  .card-pokemon {
-    width: 170px;
-    padding: 15px 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    border-radius: 16px;
-    transition: 0.3s ease-in-out;
-    position: relative;
-    /* Necessário para posicionamento absoluto do gif */
-    overflow: visible;
-    /* Permite que o conteúdo saia do card */
-    padding-top: 200px;
-  }
+.card-pokemon {
+  width: 170px;
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  border-radius: 16px;
+  transition: 0.3s ease-in-out;
+  position: relative;
+  /* Necessário para posicionamento absoluto do gif */
+  overflow: visible;
+  /* Permite que o conteúdo saia do card */
+  padding-top: 200px;
+}
 
-  .card-pokemon::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 16px;
-    /* Deve corresponder ao border-radius do card */
-    background: radial-gradient(circle,
-        rgba(255, 255, 255, 0) 0%,
-        /* Cor normal no centro (transparente) */
-        rgba(33, 2, 44, 0.6) 70%,
-        /* Cor escura nas bordas */
-        rgba(33, 2, 44, 0.8) 100%
-        /* Cor ainda mais escura nas bordas */
-      );
-    z-index: 0;
-    /* Garante que a vinheta fique atrás do conteúdo do card */
-  }
+.card-pokemon::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  /* Deve corresponder ao border-radius do card */
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0) 0%,
+    /* Cor normal no centro (transparente) */ rgba(33, 2, 44, 0.6) 70%,
+    /* Cor escura nas bordas */ rgba(33, 2, 44, 0.8) 100%
+      /* Cor ainda mais escura nas bordas */
+  );
+  z-index: 0;
+  /* Garante que a vinheta fique atrás do conteúdo do card */
+}
 
-  .gif {
-    position: absolute;
-    /* Posicionamento absoluto */
-    top: 0px;
-    /* Ajuste conforme necessário */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 170px !important;
-    /* Aumente conforme necessário */
-    height: 170px !important;
-    min-width: 170px;
-    /* Aumente conforme necessário */
-    object-fit: cover;
-    z-index: 1;
-    /* Garante que o gif fique sobre o card */
-    transition: transform 0.3s ease;
-    /* Adiciona uma transição suave */
-  }
+.gif {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 170px !important;
+  height: 170px !important;
+  min-width: 170px;
+  object-fit: cover;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
 
-  .card-pokemon:hover .gif {
-    transform: translateX(-50%) scale(1.1);
-    /* Escala e posiciona o gif no hover */
-  }
+.card-pokemon:hover .gif {
+  transform: translateX(-50%) scale(1.1);
+}
 
+.types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  z-index: 1;
+  width: 100%;
+}
 
-  .types {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
-    z-index: 1;
-  }
+.tipo {
+  padding: 6px 8px;
+  border-radius: 12px;
+  color: #fff;
+  // display: inline-block;
+  font-size: 12px;
+  font-weight: bold;
+}
 
-  .tipo {
-    padding: 6px 8px;
-    border-radius: 12px;
-    color: #fff;
-    display: inline-block;
-    font-size: 12px;
+.descricao {
+  font-size: 12px;
+  color: #666666;
+}
+
+.cartao-pokemon:hover .gif {
+  transform: scale(1.1);
+}
+
+.infos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  z-index: 1;
+
+  span {
+    font-size: 16px;
     font-weight: bold;
-  }
-
-
-  .descricao {
-    font-size: 12px;
-    color: #666666;
-  }
-
-  .cartao-pokemon:hover .gif {
-    transform: scale(1.1);
-  }
-
-  .infos {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    z-index: 1;
-
-    span {
-      font-size: 16px;
-      font-weight: bold;
-      color: #f2a839ed;
-    }
-  }
-
-  .filter-container {
-    margin: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .filter-select {
-    font-family: "Poppins", sans-serif;
-    height: 40px;
-    padding: 0 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    color: #333;
-    cursor: pointer;
-  }
-
-
-  .search-itens {
-
-    .itens {
-      ul {
-        display: flex;
-        flex-direction: row;
-        gap: 15px;
-        cursor: pointer;
-      }
-
-      li {
-        transition: transform 0.3s ease;
-
-        img {
-          width: 2em !important;
-          height: 2em !important;
-        }
-
-      }
-
-      li:hover {
-        transform: scale(1.2);
-      }
-
-    }
+    color: #f2a839ed;
   }
 }
 
+.filter-container {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-select {
+  font-family: "Poppins", sans-serif;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+.search-itens {
+  .itens {
+    ul {
+      display: flex;
+      flex-direction: row;
+      gap: 15px;
+      cursor: pointer;
+    }
+
+    li {
+      transition: transform 0.3s ease;
+
+      img {
+        width: 2em !important;
+        height: 2em !important;
+      }
+    }
+
+    li:hover {
+      transform: scale(1.2);
+    }
+  }
+}
 
 .wrapper-search {
   width: 100%;
@@ -303,9 +285,11 @@ main {
 .btn-battle {
   border: hidden;
   background: rgb(246, 120, 48);
-  background: linear-gradient(93deg,
-      rgba(246, 120, 48, 1) 32%,
-      rgba(230, 17, 17, 1) 96%);
+  background: linear-gradient(
+    93deg,
+    rgba(246, 120, 48, 1) 32%,
+    rgba(230, 17, 17, 1) 96%
+  );
 
   padding: 10px;
   color: white;
@@ -327,11 +311,38 @@ main {
   font-family: sans-serif;
 }
 
+.selected-card {
+  background-image: none !important;
+  * {
+    display: flex !important;
+  }
+}
+.selected-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  /* Deve corresponder ao border-radius do card */
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0) 0%,
+    /* Cor normal no centro (transparente) */ rgba(33, 2, 44, 0.6) 70%,
+    /* Cor escura nas bordas */ rgba(33, 2, 44, 0.8) 100%
+      /* Cor ainda mais escura nas bordas */
+  );
+  z-index: 0;
+  /* Garante que a vinheta fique atrás do conteúdo do card */
+}
+
 .title {
   font-size: 1.5em;
   font-weight: 900;
   text-align: center;
   margin: 0;
+  justify-content: center;
 }
 
 .flip-card-inner {
@@ -353,42 +364,73 @@ main {
   position: absolute;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-bottom: 10px;
+  gap: 10px;
   width: 100%;
   height: 100%;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   border-radius: 1rem;
-  border: 1px solid rgba(255, 138, 95, 0.4);
-}
-
-.flip-card-front {
-  background: linear-gradient(120deg,
-      rgba(31, 2, 42, 0.7) 30%,
-      /* tom escuro de roxo */
-      rgba(115, 6, 81, 0.425) 88%,
-      /* tom mais escuro de roxo */
-      rgba(98, 4, 101, 0.6) 40%,
-      /* tom intermediário de roxo */
-      rgba(255, 151, 113, 0.5) 78%
-      /* tom claro e suave */
-    );
-  color: #ffc671c7;
-  /* cor dourada para contraste */
+  // border: 1px solid rgba(255, 138, 95, 0.4);
+  background-image: url("https://i.ebayimg.com/images/g/ROoAAOSw~7Nf7ibu/s-l400.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  * {
+    display: none;
+  }
 }
 
 .flip-card-back {
-  background: linear-gradient(120deg,
-      rgba(31, 2, 42, 0.7) 30%,
-      /* tom escuro de roxo */
-      rgba(115, 6, 81, 0.425) 88%,
-      /* tom mais escuro de roxo */
-      rgba(98, 4, 101, 0.6) 40%,
-      /* tom intermediário de roxo */
-      rgba(255, 151, 113, 0.5) 78%
-      /* tom claro e suave */
-    );
-
   color: white;
   transform: rotateY(180deg);
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+}
+.stats {
+  //  background: red;
+  width: 100%;
+  justify-content: space-between;
+  padding-top: 5px;
+  align-items: center;
+  display: flex;
+  border-bottom: 1px solid white;
+}
+
+@keyframes moveToFront {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+  50% {
+    transform: scale(1.2) translateX(-84%);
+  }
+  100% {
+    transform: scale(1) translateX(-84%);
+  }
+}
+
+@keyframes moveToBack {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+  50% {
+    transform: scale(1.2) translateX(84%);
+  }
+  100% {
+    transform: scale(1) translateX(84%);
+  }
+}
+
+.flip-card {
+  position: relative;
+  z-index: 1;
+}
+
+.flip-card-winner {
+  animation: moveToFront 1s forwards;
+}
+
+.flip-card-loser {
+  animation: moveToBack 1s forwards;
 }
