@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchBar = document.getElementById("search-bar");
 
   // Elementos dos cards de batalha (Pokémon 1 e Pokémon 2)
+  const pokemon1Card = document.getElementById("pokemon1-card");
   const pokemon1Img = document.getElementById("pokemon1-img");
   const pokemon1Name = document.getElementById("pokemon1-name");
   const pokemon1Info = document.getElementById("pokemon1-info");
@@ -57,82 +58,152 @@ document.addEventListener("DOMContentLoaded", function () {
     return response.json();
   }
 
+  function populateCardContent(card, pokemon, isBack = false) {
+    const { name, types, sprites, stats, moves } = pokemon;
+
+    // Define o conteúdo do card (frente ou verso)
+    const img = document.createElement("img");
+    img.src = sprites.front_default;
+    img.alt = `${name} image`;
+    img.classList.add("gif");
+
+    const nameElement = document.createElement("p");
+    nameElement.classList.add("title");
+    nameElement.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+
+    const typeElement = document.createElement("ul");
+    typeElement.classList.add("types");
+    types.forEach((type) => {
+      const typeItem = document.createElement("li");
+      typeItem.classList.add("tipo", type.type.name);
+      typeItem.innerHTML = typeIcons[type.type.name] || type.type.name;
+      typeElement.appendChild(typeItem);
+    });
+
+    // Limpa o conteúdo do card
+    card.innerHTML = "";
+
+    if (!isBack) {
+      // Preenche a frente do card
+      card.appendChild(img);
+      card.appendChild(nameElement);
+      card.appendChild(typeElement);
+    } else {
+      // Preenche o verso do card
+      const statsTitle = document.createElement("p");
+      statsTitle.classList.add("title");
+      statsTitle.textContent = "Stats";
+
+      const hpElement = document.createElement("p");
+      hpElement.classList.add("stats");
+      hpElement.innerHTML = `Vida: <span>${
+        stats.find((stat) => stat.stat.name === "hp").base_stat
+      }</span>`;
+
+      const attackElement = document.createElement("p");
+      attackElement.classList.add("stats");
+      attackElement.innerHTML = `Ataque: <span>${
+        stats.find((stat) => stat.stat.name === "attack").base_stat
+      }</span>`;
+
+      const damageElement = document.createElement("p");
+      damageElement.classList.add("stats");
+      const damage =
+        moves.length > 0 ? moves[0].move.name.split("-").join(" ") : "None";
+      damageElement.innerHTML = `Poder: <span>${damage}</span>`;
+      card.appendChild(statsTitle);
+      card.appendChild(hpElement);
+      card.appendChild(attackElement);
+      card.appendChild(damageElement);
+    }
+  }
 
   // Função que cria e exibe um card para cada Pokémon na lista
   function createPokemonCard(pokemon) {
-    const { name, types, sprites, stats, moves } = pokemon;
-  
-    // Cria o elemento HTML para o card
     const card = document.createElement("li");
-    card.className = "card-pokemon";  // Classe CSS para estilizar os cards
-    card.dataset.name = name.toLowerCase(); // Armazena o nome do Pokémon para busca
-    card.dataset.sprite = sprites.front_default; // Sprite (imagem) do Pokémon
-    card.dataset.types = types.map((type) => type.type.name).join(", "); // Armazena os tipos do Pokémon
-    card.dataset.hp = stats.find((stat) => stat.stat.name === "hp").base_stat; // Pega o valor de HP do Pokémon
-    card.dataset.attack = stats.find((stat) => stat.stat.name === "attack").base_stat; // Pega o valor de ataque do Pokémon
-    card.dataset.damage = moves.length > 0 ? moves[0].move.name : "None"; // Nome do primeiro ataque
-  
-    // Define a cor do fundo do card baseado no tipo principal do Pokémon
-    const backgroundColor = getTypeColor(types[0].type.name);
+    card.className = "card-pokemon";
+    card.dataset.pokemon = JSON.stringify(pokemon);
+
+    const backgroundColor = getTypeColor(pokemon.types[0].type.name);
     card.style.backgroundColor = backgroundColor;
     card.style.border = `2px solid ${backgroundColor}`;
     card.style.boxShadow = `0 4px 10px rgba(${hexToRgb(backgroundColor)}, 0.5)`;
-  
-    // Estrutura HTML para exibir o sprite e as informações do Pokémon no card
-    const infos = `
-       <img src="${sprites.front_default}" alt="${name}" class="gif" />
-    <div class="infos">
-      <span>${name.charAt(0).toUpperCase() + name.slice(1)}</span>
-      <ul class="types">
-        ${types
-          .map(
-            (obj) =>
-                `<li class="tipo ${obj.type.name}">${typeIcons[obj.type.name] || obj.type.name}</li>`
-          )
-          .join("")}
-      </ul>
-    </div>
-`;
-    
-    // Define o conteúdo HTML do card
-    card.innerHTML = infos;
-  
-    // Armazena o Pokémon completo no dataset do card
-    card.dataset.pokemon = JSON.stringify(pokemon);
-  
-    // Adiciona evento de clique para selecionar o Pokémon para o card de batalha
+
+    // Popula o card usando a função genérica
+    populateCardContent(card, pokemon);
+
     card.addEventListener("click", () => selectPokemon(card));
-  
-    // Adiciona o card do Pokémon à lista de cards no DOM
+
     pokemonList.appendChild(card);
-  
-    // Armazena o card para uso posterior (ex: filtragem)
     allPokemonData.push(card);
   }
-  
+  // Função para selecionar um Pokémon e exibir suas informações no card de batalha
+  function selectPokemon(card) {
+    const pokemon = JSON.parse(card.dataset.pokemon);
+    const backgroundColor = getTypeColor(pokemon.types[0].type.name);
 
+    function setupSelectedCard(cardFront, cardBack) {
+      cardFront.style.backgroundColor = backgroundColor;
+      cardFront.style.border = `2px solid ${backgroundColor}`;
+      cardFront.style.boxShadow = `0 4px 10px rgba(${hexToRgb(
+        backgroundColor
+      )}, 0.5)`;
+
+      cardBack.style.backgroundColor = backgroundColor;
+      cardBack.style.border = `2px solid ${backgroundColor}`;
+      cardBack.style.boxShadow = `0 4px 10px rgba(${hexToRgb(
+        backgroundColor
+      )}, 0.5)`;
+
+      // Popula a frente e o verso usando a função genérica
+      populateCardContent(cardFront, pokemon);
+      populateCardContent(cardBack, pokemon, true);
+    }
+
+    if (selectedPokemon === 1) {
+      const pokemon1Card = document.getElementById("pokemon1-card");
+      const pokemon1Front = pokemon1Card.querySelector(".flip-card-front");
+      const pokemon1Back = pokemon1Card.querySelector(".flip-card-back");
+
+      pokemon1Front.classList.add("selected-card");
+      pokemon1Back.classList.add("selected-card");
+
+      setupSelectedCard(pokemon1Front, pokemon1Back);
+      selectedPokemon = 2;
+    } else {
+      const pokemon2Card = document.getElementById("pokemon2-card");
+      const pokemon2Front = pokemon2Card.querySelector(".flip-card-front");
+      const pokemon2Back = pokemon2Card.querySelector(".flip-card-back");
+
+      pokemon2Front.classList.add("selected-card");
+      pokemon2Back.classList.add("selected-card");
+
+      setupSelectedCard(pokemon2Front, pokemon2Back);
+      selectedPokemon = 1;
+    }
+  }
 
   // Função que retorna a cor de fundo correspondente ao tipo de Pokémon
   function getTypeColor(type) {
     const colors = {
-      fire: "#6D1D3F",     // tom mais escuro de vermelho com toque roxo
-      water: "#3D4A6F",    // tom mais escuro de azul com toque roxo
-      grass: "#4A5E3A",    // tom mais escuro de verde com toque roxo
+      fire: "#6D1D3F", // tom mais escuro de vermelho com toque roxo
+      water: "#3D4A6F", // tom mais escuro de azul com toque roxo
+      grass: "#4A5E3A", // tom mais escuro de verde com toque roxo
       electric: "#6D5A3A", // tom mais escuro de amarelo com toque roxo
-      ice: "#4B6A6A",     // tom mais escuro de verde-água com toque roxo
+      ice: "#4B6A6A", // tom mais escuro de verde-água com toque roxo
       fighting: "#5E2D2D", // tom mais escuro de vermelho com toque roxo
-      poison: "#5A2C6A",  // tom mais escuro de roxo
-      ground: "#6D4A2F",  // tom mais escuro de laranja com toque roxo
-      flying: "#3D4A6F",  // tom mais escuro de azul com toque roxo (mesmo do water)
+      poison: "#5A2C6A", // tom mais escuro de roxo
+      ground: "#6D4A2F", // tom mais escuro de laranja com toque roxo
+      flying: "#3D4A6F", // tom mais escuro de azul com toque roxo (mesmo do water)
       psychic: "#6A3C5A", // tom mais escuro de rosa com toque roxo
-      bug: "#4A6E3A",     // tom mais escuro de verde com toque roxo
-      rock: "#6D5A4A",    // tom mais escuro de bege com toque roxo
-      ghost: "#4A2D6A",   // tom mais escuro de roxo
-      dragon: "#2F4A6D",  // tom mais escuro de azul com toque roxo
-      dark: "#3E2D3E",    // tom mais escuro de cinza com toque roxo
-      steel: "#3A5E6A",   // tom mais escuro de azul com toque roxo
-      fairy: "#6A2F4F",   // tom mais escuro de rosa com toque roxo
-      normal: "#6A6A6A",  // tom mais escuro de cinza com toque roxo
+      bug: "#4A6E3A", // tom mais escuro de verde com toque roxo
+      rock: "#6D5A4A", // tom mais escuro de bege com toque roxo
+      ghost: "#4A2D6A", // tom mais escuro de roxo
+      dragon: "#2F4A6D", // tom mais escuro de azul com toque roxo
+      dark: "#3E2D3E", // tom mais escuro de cinza com toque roxo
+      steel: "#3A5E6A", // tom mais escuro de azul com toque roxo
+      fairy: "#6A2F4F", // tom mais escuro de rosa com toque roxo
+      normal: "#6A6A6A", // tom mais escuro de cinza com toque roxo
     };
 
     return colors[type] || "#A8A77A"; // Cor padrão se o tipo não for encontrado
@@ -146,68 +217,39 @@ document.addEventListener("DOMContentLoaded", function () {
     return `${r}, ${g}, ${b}`;
   }
 
-  const isLoaded = ()=>{
-    const load = document.getElementById('loading')
-    load.style.display = 'none'
-  }
-  
+  const isLoaded = () => {
+    const load = document.getElementById("loading");
+    load.style.display = "none";
+  };
+
   // Função que carrega os dados de todos os Pokémon e cria os cards
   async function loadPokemonData() {
     try {
       // Cria um array de promessas para buscar os dados de todos os Pokémon
-      const promises = Array.from({ length: pokemonCount }, (_, index) => fetchPokemonData(index + 1));
-  
+      const promises = Array.from({ length: pokemonCount }, (_, index) =>
+        fetchPokemonData(index + 1)
+      );
+
       // Espera todas as promessas serem resolvidas
       const results = await Promise.all(promises);
 
       // Cria os cards dos  Pokémon
-      results.forEach(data => createPokemonCard(data));
-      isLoaded()
+      results.forEach((data) => createPokemonCard(data));
+      isLoaded();
     } catch (error) {
       console.error("Erro ao carregar dados dos Pokémon:", error); // Mostra o erro no console, caso ocorra
     }
   }
 
-  // Função para selecionar um Pokémon e exibir suas informações no card de batalha
-  function selectPokemon(card) {
-    const pokemon = JSON.parse(card.dataset.pokemon); // Obtém os dados completos do Pokémon do dataset
-    const { name, types, sprites, stats, moves } = pokemon;
-    const hp = stats.find((stat) => stat.stat.name === "hp").base_stat; // Obtém o HP do Pokémon
-    const attack = stats.find((stat) => stat.stat.name === "attack").base_stat; // Obtém o ataque base do Pokémon
-    const damage = moves.length > 0 ? moves[0].move.name : "None"; // Nome do primeiro movimento (ataque)
-
-    const typesText = types.map((t) => typeIcons[t.type.name] || t.type.name).join(" "); // Concatena os tipos em uma string com ícones
-
-    // Se for o primeiro Pokémon selecionado
-    if (selectedPokemon === 1) {
-      pokemon1Img.src = sprites.front_default;
-      pokemon1Name.textContent = name.charAt(0).toUpperCase() + name.slice(1);
-      pokemon1Info.innerHTML = typesText; // Atualiza o tipo no card de batalha com ícones
-      pokemon1HP.textContent = hp;
-      pokemon1Attack.textContent = attack;
-      pokemon1Damage.textContent = damage;
-      selectedPokemon = 2; // Alterna para o próximo Pokémon
-    } else {
-      // Se for o segundo Pokémon selecionado
-      pokemon2Img.src = sprites.front_default;
-      pokemon2Name.textContent = name.charAt(0).toUpperCase() + name.slice(1);
-      pokemon2Info.innerHTML = typesText; // Atualiza o tipo no card de batalha com ícones
-      pokemon2HP.textContent = hp;
-      pokemon2Attack.textContent = attack;
-      pokemon2Damage.textContent = damage;
-      selectedPokemon = 1; // Retorna ao primeiro Pokémon
-    }
-  }
-  
-  document.querySelectorAll('.itens img').forEach(icon => {
-    icon.addEventListener('click', function() {
-      const type = this.getAttribute('data-type');
-      document.querySelectorAll('.card-pokemon').forEach(pokemon => { 
-        const pokemonTypes = pokemon.getAttribute('data-types').split(', ');
-        if (pokemonTypes.includes(type) || type === 'all') {
-          pokemon.style.display = 'inline-block';
+  document.querySelectorAll(".itens img").forEach((icon) => {
+    icon.addEventListener("click", function () {
+      const type = this.getAttribute("data-type");
+      document.querySelectorAll(".card-pokemon").forEach((pokemon) => {
+        const pokemonTypes = pokemon.getAttribute("data-types").split(", ");
+        if (pokemonTypes.includes(type) || type === "all") {
+          pokemon.style.display = "inline-block";
         } else {
-          pokemon.style.display = 'none';
+          pokemon.style.display = "none";
         }
       });
     });
@@ -234,4 +276,24 @@ document.addEventListener("DOMContentLoaded", function () {
   // Código para carregar Pokémon
   loadPokemonData();
 });
+function startBattle() {
+  console.log("batalha iniciada");
+  animationBattleCards();
+}
 
+const animationBattleCards = () => {
+  // Obtém os elementos dos cards
+  const card1 = document.getElementById("pokemon1-card");
+  const card2 = document.getElementById("pokemon2-card");
+
+  // Remove quaisquer classes de animação anteriores
+
+  // Adiciona a classe de animação para o card da direita ganhar
+  card2.classList.add("flip-card-winner");
+  card1.classList.add("flip-card-loser");
+  setTimeout(() => {
+    //Remove apos 1segundo
+    card2.classList.remove("flip-card-winner");
+    card1.classList.remove("flip-card-loser");
+  }, 2000);
+};
