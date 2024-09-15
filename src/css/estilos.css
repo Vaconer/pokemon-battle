@@ -1,49 +1,47 @@
 body {
   font-family: "Poppins", sans-serif;
   width: 100vw;
+  height: 100vh;
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #14011b 0%, #5b260b 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(61, 17, 143, 1) 4%,
+    rgba(64, 8, 65, 1) 96%
+  );
+
   color: #ffffff;
   overflow-x: hidden;
 }
-
-header,
-main h1 {
-  padding: 20px;
-  color: rgb(255, 255, 255);
-  margin: 0 50px;
-}
-
 header {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
   position: relative;
   color: rgba(255, 174, 145, 0.91);
-
-  .logo {
-    position: absolute;
-    top: 2rem;
-    left: 1rem;
-    width: 50px;
-    max-width: 50px;
-
-    transition: 0.2s ease-in-out;
-  }
-
-  .logo:hover {
-    transform: scale(1.1);
-  }
+  padding-top: 10px;
 }
 
+header h1 {
+  padding: 20px;
+  color: rgb(255, 255, 255);
+  font-size: 3rem;
+}
+
+h2 {
+  color: rgb(255, 255, 255, 0.8) !important;
+  font-size: 2rem;
+}
+
+main {
+  padding: 0 40px;
+  overflow-y: hidden;
+}
 .group {
   display: flex;
   align-items: center;
   position: relative;
-  max-width: 200px;
-  /* Ajuste conforme necessário */
+  width: 20vw;
 }
 
 .input {
@@ -55,10 +53,8 @@ header {
   border: 0;
   border-radius: 12px;
   background-color: #16171d;
-  /* Cor de fundo escura */
   outline: none;
   color: #bdbecb;
-  /* Cor do texto */
   transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
   cursor: text;
   z-index: 0;
@@ -90,18 +86,12 @@ header {
   z-index: 1;
 }
 
-h2 {
-  color: rgba(255, 174, 145, 0.703) !important;
-}
-
-.listagem-pokemon {
+.list-pokemon {
   padding-top: 3%;
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
   justify-content: center;
-  width: calc(100% - 40px);
-  margin: 0 20px;
   cursor: pointer;
 }
 
@@ -109,8 +99,13 @@ h1 {
   padding-left: 10%;
 }
 
+#remove-filter {
+  display: none;
+  border-radius: 50%;
+}
+
 .card-pokemon {
-  width: 170px;
+  width: 200px;
   padding: 15px 10px;
   display: flex;
   flex-direction: column;
@@ -120,9 +115,7 @@ h1 {
   border-radius: 16px;
   transition: 0.3s ease-in-out;
   position: relative;
-  /* Necessário para posicionamento absoluto do gif */
   overflow: visible;
-  /* Permite que o conteúdo saia do card */
   padding-top: 200px;
 }
 
@@ -134,21 +127,18 @@ h1 {
   right: 0;
   bottom: 0;
   border-radius: 16px;
-  /* Deve corresponder ao border-radius do card */
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0) 0%,
-    /* Cor normal no centro (transparente) */ rgba(33, 2, 44, 0.6) 70%,
-    /* Cor escura nas bordas */ rgba(33, 2, 44, 0.8) 100%
-      /* Cor ainda mais escura nas bordas */
+    rgba(33, 2, 44, 0.6) 70%,
+    rgba(33, 2, 44, 0.8) 100%
   );
   z-index: 0;
-  /* Garante que a vinheta fique atrás do conteúdo do card */
 }
 
 .gif {
   position: absolute;
-  top: 0px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   width: 170px !important;
@@ -174,22 +164,12 @@ h1 {
   width: 100%;
 }
 
-.tipo {
+.type {
   padding: 6px 8px;
   border-radius: 12px;
   color: #fff;
-  // display: inline-block;
   font-size: 12px;
   font-weight: bold;
-}
-
-.descricao {
-  font-size: 12px;
-  color: #666666;
-}
-
-.cartao-pokemon:hover .gif {
-  transform: scale(1.1);
 }
 
 .infos {
@@ -225,8 +205,15 @@ h1 {
   cursor: pointer;
 }
 
-.search-itens {
-  .itens {
+.wrapper-search {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  display: flex;
+  flex-direction: row;
+
+  .items {
     ul {
       display: flex;
       flex-direction: row;
@@ -243,21 +230,10 @@ h1 {
       }
     }
 
-    li:hover {
+    img:hover {
       transform: scale(1.2);
     }
   }
-}
-
-.wrapper-search {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 0.75fr 1fr;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  gap: 100px;
 }
 
 .wrapper-battle {
@@ -277,9 +253,13 @@ h1 {
 .cards-battle {
   width: 100%;
   display: flex;
+  height: 300px;
   align-items: center;
   justify-content: center;
   gap: 3rem;
+  transition-duration: 500ms;
+
+  position: relative;
 }
 
 .btn-battle {
@@ -325,16 +305,13 @@ h1 {
   right: 0;
   bottom: 0;
   border-radius: 16px;
-  /* Deve corresponder ao border-radius do card */
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0) 0%,
-    /* Cor normal no centro (transparente) */ rgba(33, 2, 44, 0.6) 70%,
-    /* Cor escura nas bordas */ rgba(33, 2, 44, 0.8) 100%
-      /* Cor ainda mais escura nas bordas */
+    rgba(33, 2, 44, 0.6) 70%,
+    rgba(33, 2, 44, 0.8) 100%
   );
   z-index: 0;
-  /* Garante que a vinheta fique atrás do conteúdo do card */
 }
 
 .title {
@@ -358,6 +335,36 @@ h1 {
   transform: rotateY(180deg);
 }
 
+.disable-hover:hover .flip-card-inner {
+  transform: none !important;
+}
+
+/* Faixa de Vencedor */
+.cards-battle::before {
+  content: "Vencedor";
+  position: absolute;
+  top: 0;
+  box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    90deg,
+    rgba(231, 208, 62, 1) 4%,
+    rgba(245, 255, 0, 1) 96%
+  );
+
+  color: black;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  border-radius: 15px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cards-battle.show-winner::before {
+  opacity: 1;
+}
+
 .flip-card-front,
 .flip-card-back {
   box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
@@ -372,7 +379,6 @@ h1 {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   border-radius: 1rem;
-  // border: 1px solid rgba(255, 138, 95, 0.4);
   background-image: url("https://i.ebayimg.com/images/g/ROoAAOSw~7Nf7ibu/s-l400.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -388,8 +394,8 @@ h1 {
   align-items: center;
   padding: 0 10px;
 }
+
 .stats {
-  //  background: red;
   width: 100%;
   justify-content: space-between;
   padding-top: 5px;
@@ -398,39 +404,80 @@ h1 {
   border-bottom: 1px solid white;
 }
 
-@keyframes moveToFront {
-  0% {
-    transform: scale(1) translateX(0);
-  }
-  50% {
-    transform: scale(1.2) translateX(-84%);
-  }
-  100% {
-    transform: scale(1) translateX(-84%);
-  }
-}
-
-@keyframes moveToBack {
-  0% {
-    transform: scale(1) translateX(0);
-  }
-  50% {
-    transform: scale(1.2) translateX(84%);
-  }
-  100% {
-    transform: scale(1) translateX(84%);
-  }
-}
-
-.flip-card {
+.spinner {
+  width: 60px;
+  height: 60px;
   position: relative;
-  z-index: 1;
 }
 
-.flip-card-winner {
-  animation: moveToFront 1s forwards;
+.spinner .dot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
 }
 
-.flip-card-loser {
-  animation: moveToBack 1s forwards;
+.spinner .dot::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+#loading {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.spinner .dot {
+  animation: spin 2s infinite;
+}
+
+.spinner .dot:nth-child(2) {
+  animation-delay: 100ms;
+}
+
+.spinner .dot:nth-child(3) {
+  animation-delay: 200ms;
+}
+
+.spinner .dot:nth-child(4) {
+  animation-delay: 300ms;
+}
+
+.spinner .dot:nth-child(5) {
+  animation-delay: 400ms;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes moveCardToRight {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+  50% {
+    transform: scale(1.3) translateX(58%);
+  }
+  100% {
+    transform: scale(1.5) translateX(58%);
+  }
+}
+
+@keyframes moveCardToLeft {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+  50% {
+    transform: scale(1.3) translateX(-58%);
+  }
+  100% {
+    transform: scale(1.5) translateX(-58%);
+  }
 }
