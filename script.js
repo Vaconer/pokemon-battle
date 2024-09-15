@@ -187,6 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const results = await Promise.all(promises);
       results.forEach((data) => createPokemonCard(data));
       isLoaded();
+      document.getElementById("btn-export").style.display = "flex";
     } catch (error) {
       console.error("Erro ao carregar dados dos Pokémon:", error);
     }
@@ -308,6 +309,12 @@ function startBattle() {
       winner = Math.random() > 0.5 ? 1 : 2;
     }
   }
+
+  // Exibir o botão de download
+  document.getElementById("download-report").style.display = "block";
+  document.getElementById("download-report").onclick = function () {
+    generateBattleReport(pokemon1Data, pokemon2Data, winner);
+  };
   handleSwapButton("reset");
   animationBattleCards(winner);
 }
@@ -370,6 +377,7 @@ const resetBattle = () => {
   card1.classList.remove("disable-hover");
   card2.classList.remove("disable-hover");
   wrapper.classList.remove("show-winner");
+  document.getElementById("download-report").style.display = "none";
 
   // Troca o texto e estilo do botão
   handleSwapButton("battle");
@@ -393,6 +401,110 @@ function handleSwapButton(state) {
   }
 }
 
+/* FUNÇOES DE MANIPULAÇÃO DE ARQUIVOS */
+
+// Função para gerar o relatório da batalha
+function generateBattleReport(pokemon1Data, pokemon2Data, winner) {
+  // Obter a data e hora atuais
+  const now = new Date();
+  const dateString = now.toLocaleDateString();
+  const timeString = now.toLocaleTimeString();
+
+  // Gerar o conteúdo do relatório
+  const reportContent = `
+    Relatório da Batalha
+    ====================
+    Data: ${dateString}
+    Hora: ${timeString}
+    
+    Pokémon 1:
+    Nome: ${
+      pokemon1Data.name.charAt(0).toUpperCase() + pokemon1Data.name.slice(1)
+    }
+    HP: ${pokemon1Data.stats.find((stat) => stat.stat.name === "hp").base_stat}
+    Ataque: ${
+      pokemon1Data.stats.find((stat) => stat.stat.name === "attack").base_stat
+    }
+    Tipos: ${pokemon1Data.types.map((type) => type.type.name).join(", ")}
+    Movimentos: ${pokemon1Data.moves
+      .slice(0, 3)
+      .map((move) => move.move.name)
+      .join(", ")} 
+
+    Pokémon 2:
+    Nome: ${
+      pokemon2Data.name.charAt(0).toUpperCase() + pokemon2Data.name.slice(1)
+    }
+    HP: ${pokemon2Data.stats.find((stat) => stat.stat.name === "hp").base_stat}
+    Ataque: ${
+      pokemon2Data.stats.find((stat) => stat.stat.name === "attack").base_stat
+    }
+    Tipos: ${pokemon2Data.types.map((type) => type.type.name).join(", ")}
+    Movimentos: ${pokemon2Data.moves
+      .slice(0, 3)
+      .map((move) => move.move.name)
+      .join(", ")}  
+    
+    Resultado da Batalha:
+    ----------------------
+    Vencedor: Pokémon ${winner} (${
+    winner === 1 ? pokemon1Data.name : pokemon2Data.name
+  })
+  `;
+
+  // Criar um blob com o conteúdo do relatório
+  const blob = new Blob([reportContent], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  // Criar um link de download e clicar nele programaticamente
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `relatorio_batalha_${dateString.replace(
+    /\//g,
+    "-"
+  )}_${timeString.replace(/:/g, "-")}.txt`;
+  document.body.appendChild(a);
+  a.click();
+
+  // Limpar o link e URL
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function exportAllPokemonData() {
+  // Coleta todos os dados dos cards visíveis
+  const pokemonData = Array.from(
+    document.querySelectorAll(".card-pokemon")
+  ).map((card) => {
+    const pokemon = JSON.parse(card.dataset.pokemon);
+    return {
+      name: pokemon.name,
+      types: pokemon.types.map((typeInfo) => typeInfo.type.name),
+      stats: pokemon.stats.map((stat) => ({
+        name: stat.stat.name,
+        base_stat: stat.base_stat,
+      })),
+      moves: pokemon.moves.map((moveInfo) => moveInfo.move.name),
+    };
+  });
+
+  // Cria um Blob com os dados em formato JSON
+  const blob = new Blob([JSON.stringify(pokemonData, null, 2)], {
+    type: "application/json",
+  });
+
+  // Cria um link para download
+  const url = URL.createObjectURL(blob);
+  console.log(blob);
+  console.log(url);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "pokemon_data.json";
+  a.click();
+
+  // Limpa o URL criado para liberar memória
+  URL.revokeObjectURL(url);
+}
 /* FUNÇÕES AUXILIARES */
 
 // Função que retorna a cor de fundo correspondente ao tipo de Pokémon
