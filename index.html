@@ -18,6 +18,16 @@
   <body id="body">
     <header>
       <h1>POKEMON BATTLE</h1>
+      <button id="btn-export" onclick="exportAllPokemonData()">
+        <img
+          width="50px"
+          height="50px"
+          style="border-radius: 50%"
+          src="https://png.pngtree.com/png-vector/20190330/ourmid/pngtree-json-file-document-icon-png-image_897441.jpg"
+        />
+        Baixar dados de <br />
+        todos os Pokémons
+      </button>
     </header>
 
     <div class="wrapper-battle">
@@ -41,6 +51,9 @@
 
       <button id="btn-battle" class="btn-battle" onclick="startBattle()">
         INICIAR BATALHA
+      </button>
+      <button id="download-report" class="btn-report">
+        Baixar Relatório da Batalha
       </button>
     </div>
 
