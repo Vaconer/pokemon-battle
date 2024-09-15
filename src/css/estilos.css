@@ -430,7 +430,8 @@ h1 {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
+  margin-top: 2.5rem;
 }
 .spinner .dot {
   animation: spin 2s infinite;
