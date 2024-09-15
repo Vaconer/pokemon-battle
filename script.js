@@ -429,7 +429,7 @@ function generateBattleReport(pokemon1Data, pokemon2Data, winner) {
     Movimentos: ${pokemon1Data.moves
       .slice(0, 3)
       .map((move) => move.move.name)
-      .join(", ")}  // Exibe até 3 movimentos
+      .join(", ")} 
 
     Pokémon 2:
     Nome: ${
@@ -443,7 +443,7 @@ function generateBattleReport(pokemon1Data, pokemon2Data, winner) {
     Movimentos: ${pokemon2Data.moves
       .slice(0, 3)
       .map((move) => move.move.name)
-      .join(", ")}  // Exibe até 3 movimentos
+      .join(", ")}  
     
     Resultado da Batalha:
     ----------------------
